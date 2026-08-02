@@ -1,0 +1,264 @@
+/* ============================================================================
+   Footer.css - Styles for the Footer Component
+   ============================================================================
+   
+   The footer uses a slightly darker background than the rest of the site
+   to visually ground it at the bottom. It features:
+   - A decorative gradient line at the top
+   - A three-column grid layout (brand, links, social)
+   - A bottom bar with copyright and back-to-top button
+   
+   Key CSS concepts:
+   - CSS Grid with fractional units (fr)
+   - Gradient backgrounds for decorative elements
+   - Flexbox for alignment within columns
+   - Hover transitions for interactive elements
+   ============================================================================ */
+
+/* ============================================================================
+   FOOTER BASE
+   ============================================================================
+   background: #0a0618
+     → An even darker shade than --bg-primary (#0f0a1e)
+     → This creates visual "grounding" — the footer feels like the base
+       of the page, anchoring everything above it.
+   
+   padding-top: 0
+     → No top padding because the gradient line sits flush at the top.
+     → The footer-content div handles the actual spacing inside.
+   ============================================================================ */
+.footer {
+  background: #0a0618;
+  padding-top: 0;
+}
+
+/* ============================================================================
+   GRADIENT LINE — Decorative Separator
+   ============================================================================
+   A thin 2px line that stretches the full width of the footer.
+   The gradient transitions through our theme colors:
+   purple → pink → orange
+   
+   This is a simple but effective design technique — a thin colored line
+   can dramatically improve the visual appeal of a section transition.
+   ============================================================================ */
+.footer-gradient-line {
+  height: 2px;
+  background: var(--gradient-primary);
+  width: 100%;
+}
+
+/* ============================================================================
+   FOOTER CONTENT — Three-Column Grid
+   ============================================================================
+   grid-template-columns: 2fr 1fr 1fr
+     → Three columns where the first is TWICE as wide as the others.
+     → Total = 4 fractions: column 1 gets 2/4 (50%), columns 2 & 3 get 1/4 (25%) each.
+   
+   This is a common footer pattern: the brand/about section needs more
+   space for the description, while links and social icons need less.
+   ============================================================================ */
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  padding: 60px 0 40px;
+}
+
+/* ============================================================================
+   FOOTER BRAND — Logo & Tagline
+   ============================================================================ */
+.footer-logo {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.footer-tagline {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+/* ============================================================================
+   FOOTER NAVIGATION — Quick Links
+   ============================================================================
+   .footer-title: Column heading style shared between "Quick Links" and "Connect"
+   
+   .footer-links: An unstyled list (no bullets) with vertical layout.
+   Flexbox with flex-direction: column stacks items vertically with
+   consistent spacing via gap.
+   ============================================================================ */
+.footer-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================================================
+   FOOTER LINK STYLES
+   ============================================================================
+   transition: color 0.3s ease
+     → Only animates the color property (not all properties).
+     → This is more performant than "transition: all" when you only
+       need one property to change.
+   
+   :hover changes color to --color-primary-light (lighter purple).
+   Using a LIGHTER shade on hover (instead of the primary purple) is
+   intentional — against the very dark footer background, a lighter
+   color provides better contrast and readability.
+   ============================================================================ */
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  color: var(--color-primary-light);
+}
+
+/* ============================================================================
+   SOCIAL LINKS — Icon Buttons
+   ============================================================================
+   These circular icon buttons use the same pattern as the Contact section
+   social links, but slightly smaller (40px vs 44px) to fit the footer's
+   more compact design.
+   ============================================================================ */
+.footer-socials {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-social {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.footer-social:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+}
+
+/* ============================================================================
+   FOOTER BOTTOM BAR
+   ============================================================================
+   border-top: Creates a subtle horizontal line separating the main
+   footer content from the copyright bar.
+   
+   justify-content: space-between
+     → Pushes the copyright text to the LEFT and the back-to-top
+       button to the RIGHT, with all remaining space between them.
+   ============================================================================ */
+.footer-bottom {
+  border-top: 1px solid rgba(124, 58, 237, 0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copyright {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ============================================================================
+   BACK TO TOP BUTTON
+   ============================================================================
+   A circular button with a gradient background (matching our theme).
+   
+   background: var(--gradient-primary)
+     → Uses our purple-to-pink-to-orange gradient.
+   
+   border: none
+     → Removes the default button border.
+   
+   cursor: pointer
+     → Changes the mouse cursor to a pointing hand on hover,
+       indicating the element is clickable.
+   
+   :hover transform: translateY(-3px)
+     → Lifts the button slightly upward on hover, creating a
+       subtle "floating" effect that invites clicking.
+   ============================================================================ */
+.back-to-top {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  font-size: 1rem;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(124, 58, 237, 0.3);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN — Mobile Layout
+   ============================================================================
+   On mobile screens (≤768px):
+   
+   1. Footer grid collapses from 3 columns to 1 column
+      → All content stacks vertically for easier reading on small screens
+   
+   2. Footer bottom changes from horizontal to vertical layout
+      → Copyright text and back-to-top button stack instead of side-by-side
+      → text-align: center centers the copyright text
+   
+   3. Footer socials center themselves
+      → Without this, they'd be left-aligned which looks odd when
+        the rest of the content is centered on mobile
+   ============================================================================ */
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 40px 0 32px;
+  }
+
+  .footer-tagline {
+    max-width: 100%;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .footer-socials {
+    justify-content: center;
+  }
+}

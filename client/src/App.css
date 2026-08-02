@@ -1,0 +1,35 @@
+/*
+  =============================================
+  📚 LESSON: App-Level Styles
+  =============================================
+  
+  This file contains styles specific to the App component.
+  Global styles are in index.css, component styles are in their own files.
+  
+  This separation keeps our CSS organized:
+  - index.css → Design system (colors, fonts, utilities)
+  - App.css → App-level layout
+  - Component.css → Styles for that specific component
+*/
+
+/* Main app wrapper */
+.app {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Smooth transitions between sections */
+main {
+  position: relative;
+}
+
+/* 
+  📚 LESSON: Smooth Section Transitions
+  
+  Adding a subtle gradient between sections makes the page 
+  feel more cohesive and polished. These pseudo-elements create 
+  seamless transitions between different background colors.
+*/
+main > *:nth-child(even) {
+  position: relative;
+}

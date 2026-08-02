@@ -1,0 +1,236 @@
+/* ============================================================
+ * 📂 Experience.css - Timeline Styles
+ * ============================================================
+ *
+ * This creates a vertical timeline layout with:
+ * 1. A gradient line running down the center
+ * 2. Cards alternating left and right
+ * 3. Glowing dots connecting cards to the line
+ * 4. Responsive single-column layout for mobile
+ *
+ * 🎓 LAYOUT STRATEGY:
+ * - The timeline uses flexbox with flex-wrap
+ * - Left cards take up 50% width on the left
+ * - Right cards take up 50% width on the right
+ * - The center line is a CSS pseudo-element (::before)
+ * ============================================================ */
+
+/* ---- Timeline Container ----
+ * The wrapper for all timeline items.
+ * We use flexbox with wrap to stack items vertically.
+ */
+.timeline {
+  position: relative;
+  /* 🎓 position: relative makes this the positioning context
+     for the ::before pseudo-element (the vertical line).
+     Children with position: absolute will be positioned
+     relative to THIS element, not the page. */
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  /* 🎓 flex-wrap: wrap allows items to flow to new lines.
+     Combined with width: 50% on children, this creates
+     our two-column timeline layout. */
+}
+
+/* ---- The Vertical Timeline Line ----
+ * Created with a ::before pseudo-element so we don't need
+ * extra HTML. It's a thin gradient strip down the center.
+ */
+.timeline::before {
+  content: '';
+  /* 🎓 content: '' is REQUIRED for pseudo-elements to appear.
+     Even though it's empty, without it, the element won't render. */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  /* 🎓 The classic centering trick:
+     1. left: 50% moves the left edge to the center
+     2. translateX(-50%) shifts it back by half its own width
+     Result: perfectly centered, regardless of width! */
+  width: 3px;
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+}
+
+/* ---- Timeline Item (Left Side, Default) ----
+ * Each timeline entry is a flex item taking half the width.
+ * Left items have content pushed to the right (toward center).
+ */
+.timeline-item {
+  display: flex;
+  justify-content: flex-end;
+  /* 🎓 justify-content: flex-end pushes the card content
+     to the RIGHT side of this 50% container, which means
+     it sits close to the center timeline line. */
+  padding: 0 40px 40px 0;
+  /* 🎓 padding-right: 40px creates space between the card
+     and the center line. padding-bottom: 40px adds vertical
+     spacing between timeline items. */
+  width: 50%;
+  position: relative;
+}
+
+/* ---- Timeline Item (Right Side) ----
+ * Right items are pushed to the right half with margin-left: auto.
+ */
+.timeline-item.right {
+  align-self: flex-end;
+  justify-content: flex-start;
+  /* 🎓 flex-start pushes content to the LEFT of this container,
+     so the card sits close to the center timeline line
+     (but on the right side of the page). */
+  margin-left: auto;
+  /* 🎓 margin-left: auto pushes this item all the way to the
+     right. In flexbox, auto margins eat up all available space.
+     This is a handy trick for alignment! */
+  padding: 0 0 40px 40px;
+  /* Mirror the padding: space on the left instead of right */
+}
+
+/* ---- Timeline Dot ----
+ * The small glowing circle on the center line.
+ */
+.timeline-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  /* 🎓 border-radius: 50% turns any square into a perfect circle.
+     This works because 50% of width = 50% of height = round. */
+  top: 20px;
+  z-index: 1;
+  /* 🎓 z-index: 1 ensures the dot appears ON TOP of the
+     timeline line (which has no z-index, defaulting to 0). */
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
+    0 0 40px rgba(124, 58, 237, 0.2);
+  /* 🎓 Multiple box-shadows create a layered glow effect:
+     - Inner glow: 20px spread, 50% opacity (bright)
+     - Outer glow: 40px spread, 20% opacity (subtle)
+     This makes the dot look like it's literally glowing! */
+}
+
+/* Dot position for LEFT cards: on the right edge (toward center) */
+.timeline-item:not(.right) .timeline-dot {
+  right: -8px;
+  /* 🎓 -8px is exactly half of the dot's 16px width.
+     This centers the dot on the timeline line, which sits
+     at the boundary between left and right halves. */
+}
+
+/* Dot position for RIGHT cards: on the left edge (toward center) */
+.timeline-item.right .timeline-dot {
+  left: -8px;
+}
+
+/* ---- Timeline Card ----
+ * The actual content card with text and styling.
+ */
+.timeline-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  max-width: calc(100% - 40px);
+  /* 🎓 calc(100% - 40px) leaves room for the dot and some
+     breathing space. calc() lets you MIX units:
+     100% (parent width) minus 40px (absolute pixels). */
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.timeline-card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: 0 5px 30px rgba(124, 58, 237, 0.1),
+    0 0 20px rgba(124, 58, 237, 0.05);
+  transform: translateY(-2px);
+}
+
+/* ---- Year Badge ---- */
+.timeline-year {
+  display: inline-block;
+  padding: 4px 16px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: white;
+}
+
+/* ---- Card Title ---- */
+.timeline-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+/* ---- Card Subtitle ---- */
+.timeline-subtitle {
+  color: var(--color-primary-light);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* ---- Card Description ---- */
+.timeline-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ============================================================
+ * 📱 RESPONSIVE: Mobile Layout (screens ≤ 768px)
+ * ============================================================
+ *
+ * 🎓 On mobile, we switch from a centered two-column timeline
+ * to a single-column layout with the line on the left side.
+ *
+ * ALL cards are positioned to the right of the line,
+ * regardless of whether they were "left" or "right" on desktop.
+ * ============================================================ */
+@media (max-width: 768px) {
+  /* Move the timeline line to the left side */
+  .timeline::before {
+    left: 20px;
+    transform: none;
+    /* 🎓 We override the centering (left: 50% + translateX)
+       and simply place the line 20px from the left edge. */
+  }
+
+  /* All items take full width and have left padding */
+  .timeline-item {
+    width: 100%;
+    padding: 0 0 30px 50px;
+    /* 🎓 50px padding-left = 20px (line position) + 16px (dot)
+       + 14px (spacing). This pushes the card past the dot. */
+    justify-content: flex-start;
+  }
+
+  /* Right items also take full width (override desktop styles) */
+  .timeline-item.right {
+    margin-left: 0;
+    padding: 0 0 30px 50px;
+    justify-content: flex-start;
+  }
+
+  /* All dots go on the left, aligned with the timeline line */
+  .timeline-item:not(.right) .timeline-dot,
+  .timeline-item.right .timeline-dot {
+    left: 12px;
+    right: auto;
+    /* 🎓 We override the right: -8px from desktop and place
+       ALL dots at left: 12px, centered on the line at 20px.
+       (12px + half of 16px = 20px = line position) */
+  }
+
+  /* Cards can be full width on mobile */
+  .timeline-card {
+    max-width: 100%;
+  }
+}

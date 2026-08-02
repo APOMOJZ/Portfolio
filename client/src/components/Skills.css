@@ -1,0 +1,242 @@
+/* =============================================================================
+ * 🎨 SKILLS SECTION STYLES
+ * =============================================================================
+ *
+ * KEY CSS CONCEPTS USED:
+ *
+ * 1. auto-fill / minmax() IN CSS GRID:
+ *    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr))
+ *    This creates a RESPONSIVE grid without media queries!
+ *    - auto-fill: Creates as many columns as will fit
+ *    - minmax(250px, 1fr): Each column is at least 250px, grows up to 1fr
+ *    Result: Cards automatically wrap to fewer columns on smaller screens.
+ *
+ * 2. PSEUDO-ELEMENTS (::after):
+ *    We use ::after on the category title to create a decorative gradient
+ *    line that appears after the text. Pseudo-elements let you add visual
+ *    content without adding extra HTML elements.
+ *
+ * 3. CSS TRANSITIONS:
+ *    The transform & box-shadow changes on hover are animated smoothly
+ *    using the transition property. This makes UI interactions feel polished.
+ *
+ * 4. rgba() FOR SEMI-TRANSPARENT COLORS:
+ *    rgba(124, 58, 237, 0.1) creates purple with 10% opacity. This lets
+ *    us make subtle borders and backgrounds that don't overpower the design.
+ * ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+ * SECTION BACKGROUND
+ * Uses the primary (darkest) background color.
+ * --------------------------------------------------------------------------- */
+.skills {
+  background: var(--bg-primary);
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL CATEGORY BLOCK
+ * Each category (Frontend, Backend, Tools) is wrapped in this container.
+ * margin-bottom adds vertical spacing between categories.
+ * --------------------------------------------------------------------------- */
+.skills-category {
+  margin-bottom: 48px;
+}
+
+/* Remove margin from the last category to avoid extra space at the bottom */
+.skills-category:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * CATEGORY TITLE
+ *
+ * display: flex + align-items: center → Aligns the text and the decorative
+ * line on the same horizontal axis.
+ *
+ * gap: 16px → Space between the text and the gradient line.
+ * --------------------------------------------------------------------------- */
+.category-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--color-primary-light);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---------------------------------------------------------------------------
+ * DECORATIVE GRADIENT LINE — After the Category Title
+ *
+ * This is a separate <span> element styled to look like a thin gradient line.
+ * - flex: 1 → Takes up all remaining horizontal space
+ * - height: 2px → Very thin line
+ * - background: linear-gradient → Fades from purple to transparent
+ *
+ * ALTERNATIVE APPROACH: You could also use a ::after pseudo-element:
+ *   .category-title::after {
+ *     content: '';
+ *     flex: 1;
+ *     height: 2px;
+ *     background: linear-gradient(90deg, var(--color-primary), transparent);
+ *   }
+ * Both approaches work! We use a span here for clarity.
+ * --------------------------------------------------------------------------- */
+.category-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    transparent 100%
+  );
+  border-radius: 1px;
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILLS GRID — Auto-Responsive Layout
+ *
+ * repeat(auto-fill, minmax(250px, 1fr)) is CSS Grid magic:
+ *
+ * Imagine your container is 1100px wide:
+ * - 1100 / 250 = 4.4 → Grid creates 4 columns
+ * - Each column gets 275px (1100 / 4)
+ *
+ * Now resize to 600px:
+ * - 600 / 250 = 2.4 → Grid creates 2 columns
+ * - Each column gets 300px (600 / 2)
+ *
+ * This creates a responsive layout WITHOUT media queries!
+ * --------------------------------------------------------------------------- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL CARD
+ *
+ * Each card represents one skill (e.g., "React", "Node.js").
+ * - background: var(--bg-card) → Dark card background
+ * - border: Subtle purple border for definition
+ * - transition: all 0.3s → Smoothly animates ALL property changes on hover
+ * - cursor: default → Normal arrow cursor (these aren't clickable)
+ * --------------------------------------------------------------------------- */
+.skill-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL CARD HOVER STATE
+ *
+ * On hover:
+ * - translateY(-5px): Card lifts up 5 pixels (floating effect)
+ * - border-color becomes more visible (opacity 0.1 → 0.3)
+ * - box-shadow adds a purple glow
+ *
+ * The transition on .skill-card smoothly animates these changes.
+ * --------------------------------------------------------------------------- */
+.skill-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL ICON
+ * The icon is large (2rem) and colored via inline styles in the JSX.
+ * display: flex centers the icon within its container.
+ * --------------------------------------------------------------------------- */
+.skill-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL NAME
+ * --------------------------------------------------------------------------- */
+.skill-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * PROGRESS BAR — Background Track
+ *
+ * This is the gray "empty" bar that sits behind the colored fill.
+ * overflow: hidden is crucial — it clips the fill bar so it doesn't
+ * extend beyond the rounded corners of the background.
+ * --------------------------------------------------------------------------- */
+.skill-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+/* ---------------------------------------------------------------------------
+ * PROGRESS BAR — Colored Fill
+ *
+ * The width is controlled dynamically by Framer Motion in the JSX.
+ * - initial: width 0%
+ * - whileInView: width {level}%
+ *
+ * The background color is also set dynamically (inline style) to match
+ * each skill's brand color.
+ *
+ * border-radius: 4px → Rounds the right edge of the fill bar.
+ * --------------------------------------------------------------------------- */
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  /* Width is set by Framer Motion animation */
+  /* Background color is set by inline style */
+}
+
+/* ---------------------------------------------------------------------------
+ * SKILL LEVEL PERCENTAGE TEXT
+ * --------------------------------------------------------------------------- */
+.skill-level {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-family: var(--font-heading);
+}
+
+/* ---------------------------------------------------------------------------
+ * 📱 RESPONSIVE DESIGN
+ * --------------------------------------------------------------------------- */
+
+/* Tablets and smaller: force single column */
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-title {
+    font-size: 1.2rem;
+  }
+
+  .skills-category {
+    margin-bottom: 36px;
+  }
+}
+
+/* Small tweak for medium screens */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}

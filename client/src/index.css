@@ -1,0 +1,286 @@
+/*
+  =============================================
+  📚 LESSON: CSS Design System (Design Tokens)
+  =============================================
+  
+  A "design system" is a set of reusable styles that keep your website 
+  consistent. Think of it like a paint palette — you pick colors from 
+  here instead of making up new ones every time.
+  
+  CSS Variables (--variable-name) let you define values once and 
+  reuse them everywhere. If you want to change a color, you change 
+  it in ONE place and it updates everywhere!
+  
+  This file is the FOUNDATION of our entire website's look.
+*/
+
+/* ===== GOOGLE FONTS ===== */
+/* 
+  We import fonts from Google Fonts. 'Poppins' is clean and modern,
+  'Space Grotesk' has a techy feel for headings.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ===== CSS RESET ===== */
+/*
+  Browsers add their own default styles (margins, padding, etc).
+  A "reset" removes these so our design looks the same everywhere.
+*/
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Makes width/height include padding & border */
+}
+
+/* ===== CSS VARIABLES (Design Tokens) ===== */
+/*
+  :root means these variables are available EVERYWHERE in our CSS.
+  We use var(--variable-name) to reference them.
+*/
+:root {
+  /* === Colors === */
+  /* Primary gradient: Purple → Pink → Orange (playful & colorful!) */
+  --color-primary: #7c3aed;        /* Vibrant purple */
+  --color-primary-light: #a78bfa;  /* Lighter purple */
+  --color-secondary: #ec4899;      /* Hot pink */
+  --color-accent: #f97316;         /* Warm orange */
+  --color-accent-yellow: #facc15;  /* Bright yellow */
+  --color-accent-cyan: #06b6d4;    /* Cyan/teal */
+  --color-accent-green: #22c55e;   /* Fresh green */
+
+  /* Background colors */
+  --bg-primary: #0f0a1e;           /* Deep dark purple-black */
+  --bg-secondary: #1a1035;         /* Slightly lighter */
+  --bg-card: #241b3d;              /* Card backgrounds */
+  --bg-card-hover: #2d2248;        /* Card hover state */
+
+  /* Text colors */
+  --text-primary: #f8fafc;         /* Almost white */
+  --text-secondary: #cbd5e1;       /* Muted gray */
+  --text-muted: #64748b;           /* Very muted */
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #7c3aed, #ec4899, #f97316);
+  --gradient-text: linear-gradient(135deg, #a78bfa, #ec4899, #f97316);
+  --gradient-card: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(236, 72, 153, 0.1));
+  --gradient-glow: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+
+  /* === Typography === */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+
+  /* === Spacing === */
+  --section-padding: 100px 0;
+  --container-width: 1200px;
+  --container-padding: 0 24px;
+
+  /* === Border Radius === */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* === Shadows === */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-glow-purple: 0 0 30px rgba(124, 58, 237, 0.3);
+  --shadow-glow-pink: 0 0 30px rgba(236, 72, 153, 0.3);
+
+  /* === Transitions === */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ===== BASE STYLES ===== */
+html {
+  scroll-behavior: smooth; /* Smooth scrolling when clicking anchor links */
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden; /* Prevent horizontal scroll from animations */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== UTILITY CLASSES ===== */
+/*
+  Utility classes are reusable CSS classes for common patterns.
+  Instead of writing the same CSS over and over, we use these!
+*/
+
+.container {
+  max-width: var(--container-width);
+  margin: 0 auto;  /* Centers the container horizontally */
+  padding: var(--container-padding);
+}
+
+.section {
+  padding: var(--section-padding);
+  position: relative;
+}
+
+/* Gradient text effect — makes text colorful! */
+.gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section title styling */
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 3rem); /* Responsive font size */
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 60px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-glow-purple);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.5);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--color-primary-light);
+}
+
+.btn-outline:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  padding: 32px;
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+/* ===== ANIMATIONS ===== */
+/*
+  @keyframes defines an animation sequence.
+  You give it a name and describe how styles change over time.
+  
+  "from" = start state, "to" = end state
+  You can also use percentages: 0%, 50%, 100%
+*/
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(124, 58, 237, 0.4); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes blob {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-light);
+}
+
+/* ===== SELECTION STYLING ===== */
+::selection {
+  background: rgba(124, 58, 237, 0.3);
+  color: white;
+}
+
+/* ===== RESPONSIVE ===== */
+/*
+  Media queries let us change styles based on screen size.
+  This makes our website look good on phones, tablets, AND desktops.
+*/
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 60px 0;
+  }
+  
+  .section-title {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+  }
+}

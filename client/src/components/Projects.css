@@ -1,0 +1,240 @@
+/* ============================================================
+ * 📂 Projects.css - Styles for the Projects Section
+ * ============================================================
+ *
+ * This stylesheet handles:
+ * 1. Filter buttons (the category tabs at the top)
+ * 2. Project grid (responsive card layout)
+ * 3. Individual project cards (hover effects, tags, links)
+ * 4. Mobile responsiveness
+ *
+ * 🎓 CSS TIP: We use CSS variables (like var(--color-primary))
+ * defined in index.css so all our colors stay consistent.
+ * If you change a variable in one place, it updates everywhere!
+ * ============================================================ */
+
+/* ---- Filter Buttons Row ----
+ * The row of category buttons (All, React, Node.js, Full-Stack)
+ * Uses flexbox to center them with wrapping on small screens.
+ */
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  /* 🎓 flex-wrap: wrap allows buttons to move to the next line
+     on smaller screens instead of overflowing horizontally */
+}
+
+/* ---- Individual Filter Button ----
+ * Default state: transparent with a subtle border.
+ * The border uses rgba() for partial transparency.
+ */
+.filter-btn {
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  /* 🎓 var(--radius-full) is typically 9999px, which creates
+     a perfectly rounded pill shape on any size element */
+  border: 2px solid rgba(124, 58, 237, 0.2);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  /* 🎓 transition: all 0.3s ease makes EVERY property change
+     animate smoothly over 0.3 seconds. This covers color,
+     background, border, transform, etc. all at once. */
+}
+
+/* Hover state: border and text become more visible */
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--text-primary);
+}
+
+/* Active state: filled with gradient background */
+.filter-btn.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+  /* 🎓 When the button is active, we fill it with a gradient
+     and make the border transparent so the gradient shows cleanly.
+     The .active class is toggled by React based on activeFilter state. */
+}
+
+/* ---- Projects Grid ----
+ * CSS Grid with auto-fill creates a responsive grid that
+ * automatically adjusts the number of columns based on space.
+ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  /* 🎓 This is the magic responsive grid formula:
+     - repeat(auto-fill, ...) = create as many columns as will fit
+     - minmax(350px, 1fr) = each column is AT LEAST 350px wide,
+       but can grow to fill available space equally (1fr)
+     Result: 3 columns on desktop, 2 on tablet, 1 on mobile
+     ALL WITHOUT MEDIA QUERIES! */
+  gap: 24px;
+}
+
+/* ---- Project Card ----
+ * Each card has a dark background, rounded corners, and a
+ * subtle border that glows on hover.
+ */
+.project-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  /* 🎓 overflow: hidden is important here! It ensures the
+     gradient image area respects the rounded corners.
+     Without it, the top gradient would have square corners. */
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Hover: lift up and add glow effect */
+.project-card:hover {
+  transform: translateY(-8px);
+  /* 🎓 translateY(-8px) moves the card UP by 8 pixels,
+     creating a "lifting" effect. Negative Y = upward. */
+  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.15),
+    0 0 30px rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+/* ---- Project Image/Gradient Area ----
+ * The top portion of each card showing a gradient background
+ * with a centered icon.
+ */
+.project-image {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.8);
+  /* 🎓 The background gradient is set via inline styles in JSX
+     (each project has a unique gradient). This area acts as
+     a placeholder for project screenshots in a real portfolio. */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle overlay pattern on the gradient area */
+.project-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 60%
+  );
+  /* 🎓 This pseudo-element adds a subtle light "glow" on the
+     gradient area, making it look more dimensional and polished.
+     Pseudo-elements (::after, ::before) let us add decorative
+     elements without extra HTML. */
+}
+
+/* ---- Project Info Section ---- */
+.project-info {
+  padding: 24px;
+}
+
+/* ---- Project Title ---- */
+.project-title {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* ---- Project Description ---- */
+.project-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  line-height: 1.6;
+  /* 🎓 line-height: 1.6 means each line is 1.6x the font size tall.
+     This adds comfortable spacing between lines for readability.
+     Anything between 1.5 and 1.8 is generally good for body text. */
+}
+
+/* ---- Tags Container ---- */
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* ---- Individual Tag Pill ---- */
+.project-tag {
+  padding: 4px 12px;
+  background: rgba(124, 58, 237, 0.15);
+  /* 🎓 Using rgba with low opacity (0.15) creates a subtle
+     tinted background that blends with the card's dark background
+     while still being visible. Much better than a solid color. */
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--color-primary-light);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Action Links Row ---- */
+.project-links {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(124, 58, 237, 0.1);
+  /* 🎓 A thin border-top separates the links from the content above,
+     creating visual hierarchy (grouping related elements). */
+}
+
+/* ---- Individual Link (GitHub / Live Demo) ---- */
+.project-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  /* 🎓 We only transition 'color' here instead of 'all'
+     because that's the only property that changes on hover.
+     Being specific is slightly better for performance. */
+}
+
+.project-link:hover {
+  color: var(--color-primary);
+}
+
+/* ---- Responsive: Mobile ----
+ * On screens smaller than 768px, switch to single column.
+ */
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+    /* 🎓 1fr = one column that takes the full width.
+       This overrides our auto-fill rule for small screens
+       where 350px min-width cards might not fit well. */
+  }
+
+  .filter-buttons {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }
+}

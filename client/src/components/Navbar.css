@@ -1,0 +1,288 @@
+/* =============================================================================
+ * Navbar.css — Styles for the Navigation Bar Component
+ * =============================================================================
+ *
+ * CSS CONCEPTS COVERED:
+ *   1. CSS Variables (custom properties) — reusing values from index.css
+ *   2. Fixed positioning — keeping the navbar on screen while scrolling
+ *   3. Flexbox — laying out items in a row/column
+ *   4. Pseudo-elements (::after) — creating decorative underlines
+ *   5. CSS Transitions — smooth animation between states
+ *   6. Backdrop-filter — frosted glass blur effect
+ *   7. z-index — controlling which elements appear "on top"
+ *   8. Media queries — responsive design for different screen sizes
+ *   9. Transform & opacity — performant CSS animations
+ *  10. The 'inset' shorthand — setting top/right/bottom/left in one line
+ *
+ * HOW CSS VARIABLES WORK:
+ *   CSS variables are defined with -- prefix (e.g., --color-primary: #7c3aed)
+ *   and used with var() function (e.g., color: var(--color-primary)).
+ *   They're defined in index.css on the :root selector so they're
+ *   available EVERYWHERE in our stylesheets. Think of them as constants!
+ * ============================================================================= */
+
+/* ─── THE NAVBAR CONTAINER ─────────────────────────────────────────────────── */
+/*
+ * position: fixed — The navbar stays at the top of the viewport even when
+ *   the user scrolls. It's removed from normal document flow.
+ *
+ * z-index: 1000 — This ensures the navbar appears ABOVE all other content.
+ *   Higher z-index = closer to the user. We use 1000 to leave room for
+ *   other elements that might need z-index values (like modals at 9999).
+ *
+ * transition: all 0.3s ease — When ANY property changes (like padding or
+ *   background), it animates smoothly over 0.3 seconds instead of snapping.
+ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 20px 0;
+  transition: all 0.3s ease;
+}
+
+/* ─── SCROLLED STATE ───────────────────────────────────────────────────────── */
+/*
+ * This class is added dynamically by React when the user scrolls past 50px.
+ * It gives the navbar a solid (but semi-transparent) background with a
+ * frosted glass effect.
+ *
+ * backdrop-filter: blur(20px) — Blurs the content BEHIND the navbar,
+ *   creating that modern "glassmorphism" effect. The background color
+ *   is semi-transparent (0.95 alpha) so the blur is visible through it.
+ *
+ * The padding shrinks from 20px to 12px, making the navbar more compact
+ * when the user is scrolling through content (saves screen space).
+ */
+.navbar.scrolled {
+  background: rgba(15, 10, 30, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px); /* Safari support */
+  padding: 12px 0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ─── INNER CONTAINER ──────────────────────────────────────────────────────── */
+/*
+ * max-width: 1200px + margin: 0 auto — This is the classic "centered
+ *   container" pattern. The content won't stretch beyond 1200px, and
+ *   margin: auto on left/right centers it horizontally.
+ *
+ * display: flex — Flexbox! This makes child elements lay out in a row.
+ *   justify-content: space-between pushes the logo to the left and
+ *   links to the right with maximum space between them.
+ *   align-items: center vertically centers everything.
+ */
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+/* ─── LOGO ─────────────────────────────────────────────────────────────────── */
+/*
+ * The logo uses our heading font (Space Grotesk) for a distinctive look.
+ * The gradient-text class from index.css handles the colorful gradient effect.
+ * text-decoration: none removes the default blue underline from <a> tags.
+ */
+.nav-logo {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ─── DESKTOP NAVIGATION LINKS ─────────────────────────────────────────────── */
+/*
+ * list-style: none — Removes the default bullet points from <ul>.
+ * gap: 32px — Adds consistent spacing between each <li> (Flexbox feature).
+ */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── INDIVIDUAL NAV LINK ──────────────────────────────────────────────────── */
+/*
+ * position: relative — This is needed for the ::after pseudo-element
+ *   (the animated underline) to position itself relative to this link.
+ *   Without it, the underline would position relative to the page.
+ *
+ * transition: color 0.3s ease — The text color change on hover is smooth.
+ */
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+/* ─── ANIMATED UNDERLINE (Pseudo-element) ──────────────────────────────────── */
+/*
+ * PSEUDO-ELEMENTS EXPLAINED:
+ * ::after creates a "virtual" element that doesn't exist in the HTML.
+ * It's a child of .nav-link that we can style independently.
+ *
+ * content: '' — Required! Without this, the pseudo-element won't render.
+ *   Even though it's empty, it tells the browser "yes, create this element."
+ *
+ * HOW THE ANIMATION WORKS:
+ *   Default state: width is 0 (invisible)
+ *   Hover state: width becomes 100% (full underline)
+ *   The transition on 'width' makes it grow smoothly from left to right.
+ *
+ * background: var(--gradient-primary) — The underline is a gradient,
+ *   not a solid color, making it visually striking.
+ */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+/* On hover, the underline expands to full width */
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* On hover, the text becomes brighter */
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* ─── MOBILE MENU BUTTON (Hamburger Icon) ──────────────────────────────────── */
+/*
+ * display: none — Hidden by default on desktop screens.
+ * It only becomes visible inside the @media query below (screens ≤ 768px).
+ *
+ * We reset all default button styles (background, border) so it looks
+ * like a clean icon, not a traditional button.
+ */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.3s ease;
+  z-index: 1001; /* Above the mobile menu so it's always clickable */
+}
+
+.mobile-menu-btn:hover {
+  color: var(--color-primary);
+}
+
+/* ─── MOBILE MENU PANEL ────────────────────────────────────────────────────── */
+/*
+ * THE SLIDE-IN ANIMATION:
+ * By default, the menu is positioned at right: -100% (completely off-screen
+ * to the right). When the 'open' class is added, right changes to 0,
+ * sliding it into view. The transition makes this smooth.
+ *
+ * display: flex + flex-direction: column — Links stack vertically in mobile.
+ *
+ * z-index: 999 — Below the navbar (1000) but above the overlay (998)
+ *   and all other page content.
+ */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 70%;
+  max-width: 320px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  padding-top: 80px;
+  transition: right 0.3s ease;
+  z-index: 999;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+}
+
+/* When 'open' class is added by React, the menu slides into view */
+.mobile-menu.open {
+  right: 0;
+}
+
+/* Mobile menu links are larger and have more padding for touch targets */
+.mobile-menu .nav-link {
+  font-size: 1.3rem;
+  padding: 16px 32px;
+  display: block;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.mobile-menu .nav-link:hover {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* ─── MOBILE OVERLAY (Dark backdrop) ───────────────────────────────────────── */
+/*
+ * This is a full-screen semi-transparent layer that appears BEHIND the
+ * mobile menu. It dims the rest of the page and acts as a click target
+ * to close the menu (a standard UX pattern).
+ *
+ * inset: 0 — Shorthand for top: 0, right: 0, bottom: 0, left: 0.
+ *   This makes the overlay cover the entire viewport.
+ *
+ * display: none / display: block — We toggle visibility with classes
+ *   rather than opacity so it doesn't block clicks when hidden.
+ */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.mobile-overlay.open {
+  display: block;
+}
+
+/* ─── RESPONSIVE BREAKPOINT ────────────────────────────────────────────────── */
+/*
+ * MEDIA QUERIES EXPLAINED:
+ * @media (max-width: 768px) means "apply these styles ONLY when the
+ * screen width is 768 pixels or less" (tablets and phones).
+ *
+ * On small screens:
+ *   - Desktop nav links are hidden (display: none)
+ *   - The hamburger button appears (display: block)
+ *
+ * 768px is a common breakpoint — it roughly matches the width of
+ * tablets in portrait mode.
+ */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-logo {
+    font-size: 1.5rem;
+  }
+}

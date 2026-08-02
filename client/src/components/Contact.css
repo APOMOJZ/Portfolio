@@ -1,0 +1,328 @@
+/* ============================================================================
+   Contact.css - Styles for the Contact Section
+   ============================================================================
+   
+   This stylesheet handles the two-column contact layout:
+   - Left column: Contact information cards & social links
+   - Right column: Contact form with styled inputs
+   
+   Key CSS concepts used:
+   - CSS Grid for the two-column layout
+   - Flexbox for card alignment and social links
+   - CSS transitions for smooth hover effects
+   - CSS custom properties (variables) for consistent theming
+   - Pseudo-elements (::placeholder) for input placeholder styling
+   - Media queries for responsive design
+   ============================================================================ */
+
+/* ============================================================================
+   SECTION BACKGROUND
+   ============================================================================
+   The contact section uses var(--bg-secondary) to differentiate it
+   from adjacent sections that use var(--bg-primary). This alternating
+   background pattern helps users visually distinguish between sections.
+   ============================================================================ */
+.contact {
+  background: var(--bg-secondary);
+}
+
+/* ============================================================================
+   CONTACT GRID — Two-Column Layout
+   ============================================================================
+   CSS Grid is used here to create a clean two-column layout.
+   
+   grid-template-columns: 1fr 1fr
+     → Creates two columns of EQUAL width.
+     → "fr" stands for "fraction" — each column gets 1 fraction of
+       the available space, so they split 50/50.
+   
+   gap: 60px
+     → Adds 60px of space BETWEEN the columns (and rows if there were any).
+     → This is cleaner than using margin/padding on individual columns.
+   
+   align-items: start
+     → Aligns grid items to the TOP of their grid area.
+     → Without this, both columns would stretch to the same height.
+     → "start" lets each column be only as tall as its content.
+   ============================================================================ */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* ============================================================================
+   CONTACT INFO — Left Column
+   ============================================================================ */
+.contact-heading {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.contact-text {
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+/* ============================================================================
+   CONTACT INFO CARDS
+   ============================================================================
+   Each card displays an icon, label, and value in a horizontal row.
+   
+   display: flex + align-items: center
+     → Places items side by side and vertically centers them.
+   
+   border: 1px solid rgba(124,58,237,0.1)
+     → A very subtle purple border (10% opacity) that adds depth
+       without being visually distracting.
+   
+   transition: all 0.3s ease
+     → Smoothly animates ALL property changes over 0.3 seconds.
+     → This means hover effects (transform, border-color, etc.)
+       will animate smoothly instead of snapping instantly.
+   ============================================================================ */
+.contact-info-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  transition: all 0.3s ease;
+}
+
+.contact-info-card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateX(5px);
+}
+
+/* ============================================================================
+   CONTACT INFO ICON
+   ============================================================================
+   The icon container is a perfect circle (equal width/height + border-radius: 50%).
+   The gradient background is applied inline via React (style={{ background: ... }})
+   because each icon has a DIFFERENT gradient color.
+   ============================================================================ */
+.contact-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.contact-info-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.contact-info-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* ============================================================================
+   SOCIAL LINKS
+   ============================================================================
+   A row of circular social media icon buttons.
+   
+   Hover effects:
+   - border-color changes to purple (--color-primary)
+   - icon color changes to match
+   - translateY(-3px) lifts the icon slightly upward
+   
+   These micro-interactions make the UI feel alive and responsive!
+   ============================================================================ */
+.contact-socials {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.contact-social-link {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-social-link:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2);
+}
+
+/* ============================================================================
+   CONTACT FORM — Right Column
+   ============================================================================
+   The form container has a card-like appearance with:
+   - Dark background (--bg-card)
+   - Rounded corners (--radius-lg)
+   - Generous padding for breathing room
+   - Subtle border for definition
+   ============================================================================ */
+.contact-form {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  border: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+/* ============================================================================
+   FORM GROUPS & INPUTS
+   ============================================================================
+   
+   .form-group: Wraps each label+input pair with consistent spacing.
+   
+   .form-input, .form-textarea: Shared styles for all form fields.
+   
+   width: 100%
+     → Makes inputs fill their container width.
+   
+   box-sizing: border-box (inherited from global styles)
+     → Ensures padding is included IN the width, not added ON TOP.
+     → Without this, a 100% width + padding would overflow its container!
+   
+   outline: none
+     → Removes the browser's default focus outline.
+     → We replace it with our own custom focus style (border-color + box-shadow).
+     → IMPORTANT: Always provide a visible focus style for accessibility!
+   
+   transition: all 0.3s ease
+     → Smoothly animates the border and box-shadow changes on focus.
+   ============================================================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg-primary);
+  border: 2px solid rgba(124, 58, 237, 0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   FOCUS STYLES
+   ============================================================================
+   When the user clicks on (or tabs to) an input, these styles kick in:
+   
+   border-color: var(--color-primary)
+     → The border turns purple to clearly show which field is active.
+   
+   box-shadow: 0 0 20px rgba(124,58,237,0.15)
+     → Adds a soft purple GLOW around the input.
+     → The "0 0 20px" means: no horizontal offset, no vertical offset,
+       20px blur radius. This creates a glow effect!
+   
+   This is much more visually appealing than the browser's default
+   blue outline, and it matches our purple color scheme.
+   ============================================================================ */
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+}
+
+/* ============================================================================
+   PLACEHOLDER STYLES
+   ============================================================================
+   ::placeholder is a pseudo-element that targets the placeholder text.
+   We style it with a muted color so it's visible but clearly different
+   from actual user input.
+   ============================================================================ */
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* ============================================================================
+   TEXTAREA SPECIFIC STYLES
+   ============================================================================
+   resize: vertical
+     → Allows users to resize the textarea vertically (taller/shorter)
+       but NOT horizontally. This prevents layout breaking.
+   
+   min-height: 120px
+     → Ensures the textarea is always at least 120px tall,
+       even if the user tries to drag it smaller.
+   ============================================================================ */
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ============================================================================
+   SUBMIT BUTTON
+   ============================================================================
+   width: 100% makes the button span the full width of the form.
+   justify-content: center centers the text inside (since .btn uses flexbox).
+   ============================================================================ */
+.btn-submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+  font-size: 1.05rem;
+  padding: 16px 32px;
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN — Mobile Breakpoint
+   ============================================================================
+   @media (max-width: 768px) means: "Apply these styles when the
+   screen width is 768px or less" (typical tablet/mobile size).
+   
+   grid-template-columns: 1fr
+     → Changes from 2 columns to 1 column (stacked vertically).
+   
+   This ensures the contact section looks great on all screen sizes!
+   ============================================================================ */
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .contact-form {
+    padding: 24px;
+  }
+
+  .contact-heading {
+    font-size: 1.6rem;
+  }
+}

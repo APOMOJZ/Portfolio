@@ -1,0 +1,341 @@
+/* =============================================================================
+ * Hero.css — Styles for the Hero / Landing Section
+ * =============================================================================
+ *
+ * CSS CONCEPTS COVERED:
+ *   1. min-height: 100vh — making a section fill the full screen
+ *   2. clamp() — responsive font sizes that scale with the viewport
+ *   3. Absolute positioning for decorative background elements
+ *   4. filter: blur() — creating soft, glowing background effects
+ *   5. Flexbox centering — centering content both horizontally & vertically
+ *   6. CSS transitions for hover effects (transform, color, box-shadow)
+ *   7. overflow: hidden — preventing blobs from causing horizontal scrollbars
+ *   8. The 'inset' shorthand property
+ *   9. Keyframe animations with @keyframes
+ *  10. Responsive design adjustments for mobile screens
+ * ============================================================================= */
+
+/* ─── HERO SECTION WRAPPER ─────────────────────────────────────────────────── */
+/*
+ * min-height: 100vh — '100vh' means 100% of the Viewport Height.
+ *   This ensures the hero section always fills at least the full screen,
+ *   even if there isn't much content inside. The 'min-' prefix means
+ *   it CAN be taller if the content needs more space.
+ *
+ * overflow: hidden — Prevents the animated blobs (which move around
+ *   and extend beyond the section boundaries) from creating unwanted
+ *   horizontal scrollbars. Anything outside the section bounds is clipped.
+ *
+ * position: relative — Creates a positioning context for the absolute-
+ *   positioned background blobs and content overlay. Without this,
+ *   the absolute-positioned children would position relative to the <body>.
+ *
+ * padding-top: 80px — Prevents content from hiding behind the fixed navbar.
+ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+/* ─── BACKGROUND CONTAINER ─────────────────────────────────────────────────── */
+/*
+ * This container holds all the floating gradient blobs.
+ * 
+ * inset: 0 — Shorthand for top: 0; right: 0; bottom: 0; left: 0;
+ *   Combined with position: absolute, this makes it cover the entire
+ *   parent section exactly.
+ *
+ * z-index: 0 — Ensures it stays BEHIND the content (z-index: 1).
+ */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ─── GRADIENT BLOBS (Background decoration) ───────────────────────────────── */
+/*
+ * These are the colorful, blurry circles that float around.
+ * 
+ * border-radius: 50% — Makes the square div into a perfect circle.
+ *   (50% of width and height rounds all corners equally)
+ *
+ * filter: blur(80px) — Applies a heavy Gaussian blur, turning the
+ *   hard-edged circle into a soft, glowing gradient cloud.
+ *   Higher values = softer/larger glow.
+ *
+ * opacity: 0.3 — Makes them semi-transparent so they're subtle
+ *   background decorations, not distracting foreground elements.
+ *
+ * Each blob class (.blob-1, .blob-2, etc.) sets a different:
+ *   - Size (width/height)
+ *   - Position (top/right/bottom/left)
+ *   - Color (background)
+ */
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+}
+
+/* Purple blob — large, positioned top-right */
+.blob-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--color-primary);
+  top: -10%;
+  right: -5%;
+}
+
+/* Pink blob — medium, positioned bottom-left */
+.blob-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--color-secondary);
+  bottom: -10%;
+  left: -5%;
+}
+
+/* Orange blob — smaller, positioned center-left */
+.blob-3 {
+  width: 350px;
+  height: 350px;
+  background: var(--color-accent);
+  top: 40%;
+  left: 30%;
+}
+
+/* Purple-pink mixed blob — adds depth, positioned bottom-right */
+.blob-4 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  bottom: 20%;
+  right: 20%;
+}
+
+/* ─── HERO CONTENT ─────────────────────────────────────────────────────────── */
+/*
+ * z-index: 1 — Places content ABOVE the background blobs (z-index: 0).
+ *   This is why we set position: relative — z-index only works on
+ *   positioned elements (relative, absolute, fixed, or sticky).
+ *
+ * max-width: 800px — Prevents text from stretching too wide on large
+ *   screens, which would make it hard to read. Ideal line length for
+ *   readability is 50-75 characters.
+ */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  padding: 0 24px;
+}
+
+/* ─── GREETING TEXT ────────────────────────────────────────────────────────── */
+.hero-greeting {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ─── WAVE EMOJI ANIMATION ─────────────────────────────────────────────────── */
+/*
+ * @keyframes EXPLAINED:
+ * Keyframes define a CSS animation step-by-step.
+ * Each percentage (0%, 20%, etc.) is a "keyframe" — a point in time.
+ * The browser smoothly transitions between these keyframes.
+ *
+ * animation shorthand: name duration timing delay count;
+ *   - wave: the name of our @keyframes rule
+ *   - 2.5s: one full cycle takes 2.5 seconds
+ *   - ease-in-out: smooth acceleration and deceleration
+ *   - 1s: wait 1 second before starting (give content time to appear)
+ *   - infinite: repeat forever
+ *
+ * transform-origin: 70% 70% — the "pivot point" of the rotation.
+ *   Instead of rotating around the center, the emoji rotates around
+ *   its bottom-right area (like a waving hand pivots at the wrist).
+ */
+.wave-emoji {
+  display: inline-block;
+  animation: wave 2.5s ease-in-out 1s infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ─── MAIN HEADING ─────────────────────────────────────────────────────────── */
+/*
+ * clamp() — RESPONSIVE FONT SIZE:
+ * clamp(minimum, preferred, maximum) creates a font size that:
+ *   - Never goes below the minimum (2.5rem)
+ *   - Scales with the viewport width (8vw = 8% of viewport width)
+ *   - Never exceeds the maximum (4.5rem)
+ *
+ * This is MUCH better than using media queries for font sizes because
+ * it creates a perfectly smooth scaling between breakpoints.
+ *
+ * Example on different screens:
+ *   - Phone (375px wide):  8vw = 30px, but min is 2.5rem (40px), so uses 40px
+ *   - Tablet (768px wide): 8vw = 61px, within range, so uses 61px
+ *   - Desktop (1200px):    8vw = 96px, but max is 4.5rem (72px), so uses 72px
+ */
+.hero-content h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+/* ─── TYPING ANIMATION TEXT ────────────────────────────────────────────────── */
+/*
+ * min-height: 50px — Prevents layout shifts when the text changes.
+ *   Without this, the section below would "jump" every time the typing
+ *   animation deletes text (shrinking the element height to 0).
+ *   Setting a minimum height reserves that space permanently.
+ */
+.typing-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  color: var(--color-primary-light);
+  min-height: 50px;
+  font-weight: 600;
+}
+
+/* ─── DESCRIPTION PARAGRAPH ────────────────────────────────────────────────── */
+.hero-description {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 24px auto;
+  line-height: 1.7;
+}
+
+/* ─── BUTTONS ROW ──────────────────────────────────────────────────────────── */
+/*
+ * flex-wrap: wrap — If the buttons don't fit in one row (on small screens),
+ *   they'll wrap to the next line instead of overflowing horizontally.
+ */
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+/* ─── SOCIAL ICONS ROW ─────────────────────────────────────────────────────── */
+.hero-socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+/* ─── INDIVIDUAL SOCIAL LINK ───────────────────────────────────────────────── */
+/*
+ * width: 48px; height: 48px — A fixed-size circle for the icon.
+ *   48px is the recommended minimum touch target size for mobile
+ *   (Google's Material Design guidelines suggest at least 48x48px).
+ *
+ * border: 1px solid rgba(124, 58, 237, 0.2) — A subtle purple border
+ *   that becomes more visible on hover. The rgba alpha (0.2) makes it
+ *   barely visible in the default state.
+ *
+ * transition: all 0.3s ease — Smoothly animates ALL property changes
+ *   (color, border-color, transform, box-shadow) on hover.
+ */
+.hero-social-link {
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  text-decoration: none;
+}
+
+/* ─── SOCIAL LINK HOVER STATE ──────────────────────────────────────────────── */
+/*
+ * transform: translateY(-3px) — Moves the icon 3px UP on hover,
+ *   creating a subtle "lift" effect. This is a common micro-interaction
+ *   that gives tactile feedback to the user.
+ *
+ * box-shadow: var(--shadow-glow-purple) — Adds a purple glow effect
+ *   behind the icon, making it look like it's "lighting up" on hover.
+ *   This variable is defined in index.css.
+ */
+.hero-social-link:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow-purple);
+}
+
+/* ─── RESPONSIVE ADJUSTMENTS ───────────────────────────────────────────────── */
+/*
+ * On mobile screens (≤768px), we reduce spacing and sizes to prevent
+ * overflow and ensure everything looks good on smaller viewports.
+ */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 60px;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Make blobs smaller on mobile so they don't overwhelm the screen */
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .blob-2 {
+    width: 250px;
+    height: 250px;
+  }
+
+  .blob-3 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .blob-4 {
+    width: 180px;
+    height: 180px;
+  }
+}
