@@ -1,89 +1,39 @@
-/*
-  =============================================
-  📚 LESSON: Blog Component
-  =============================================
-  
-  This component displays blog post cards in a grid.
-  
-  KEY CONCEPTS YOU'LL LEARN:
-  1. DATA ARRAYS: Storing structured data in JavaScript arrays
-  2. .map() METHOD: Transforming data into React elements
-  3. DYNAMIC STYLING: Passing different styles per card
-  4. COMPONENT REUSABILITY: One card template, multiple posts
-*/
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './Blog.css';
 
-/*
-  📚 LESSON: Static Fallback Data
-  
-  If our backend API is not running, we still want the website to work.
-  We keep these mock posts as a "fallback" (backup) so the visitor 
-  always sees something, even if the database is offline!
-*/
 const fallbackBlogPosts = [
   {
     _id: '1',
-    title: 'My Journey into Web Development',
+    title: 'Managing Client-Side State with localStorage in React',
     excerpt:
-      'How I went from knowing nothing about coding to building full-stack applications. The ups, downs, and everything I learned along the way.',
-    createdAt: '2025-01-15T00:00:00.000Z',
-    readTime: '5 min read',
-    category: 'Journey',
-    categoryColor: '#f97316',
-    gradient: 'linear-gradient(135deg, #f97316, #ec4899)',
+      'Notes on keeping React component state synchronized with browser localStorage for tools like the Kanban Board and Expense Tracker.',
+    createdAt: '2026-04-12T00:00:00.000Z',
+    readTime: '4 min read',
+    category: 'React.js',
   },
   {
     _id: '2',
-    title: 'Understanding the MERN Stack',
+    title: 'Writing Predictable Joins and Constraints in PostgreSQL',
     excerpt:
-      'A beginner-friendly breakdown of MongoDB, Express, React, and Node.js — what each one does and how they work together.',
-    createdAt: '2025-02-20T00:00:00.000Z',
-    readTime: '8 min read',
-    category: 'Tutorial',
-    categoryColor: '#7c3aed',
-    gradient: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+      'Practical patterns for primary keys, foreign keys, and multi-table queries when modeling structured application data in SQL.',
+    createdAt: '2026-06-18T00:00:00.000Z',
+    readTime: '5 min read',
+    category: 'SQL',
   },
   {
     _id: '3',
-    title: 'Building My First Full-Stack App',
+    title: 'Building FreeClass and Team Data Dashboards',
     excerpt:
-      'Lessons learned from building my first complete MERN application from scratch — including all the mistakes I made and how I fixed them.',
-    createdAt: '2025-03-10T00:00:00.000Z',
-    readTime: '6 min read',
-    category: 'Project',
-    categoryColor: '#22c55e',
-    gradient: 'linear-gradient(135deg, #22c55e, #06b6d4)',
+      'Observations from organizing timetable lookups in FreeClass and collaborating across departments on the Food Toxicants Dashboard.',
+    createdAt: '2026-09-05T00:00:00.000Z',
+    readTime: '4 min read',
+    category: 'Projects',
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
-
 function Blog() {
-  // ========================================================================
-  // STATE MANAGEMENT for API Calls
-  // ========================================================================
-  // 1. posts: Stores the array of blogs fetched from MongoDB
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -92,93 +42,59 @@ function Blog() {
     setIsLoading(false);
   }, []);
 
-  // Helper to format date strings nicely
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
-    <section id="blog" className="section">
+    <section id="blog" className="section blog">
       <div className="container">
-        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="section-header"
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.35 }}
         >
-          <h2 className="section-title">
-            <span className="gradient-text">My Blog</span>
-          </h2>
+          <span className="section-label">05 / Notes</span>
+          <h2 className="section-title">Technical Notes</h2>
           <p className="section-subtitle">
-            Sharing my learnings, tutorials, and experiences as I grow as a
-            developer
+            Short write-ups on React.js state patterns, SQL/PostgreSQL queries, and project architecture.
           </p>
         </motion.div>
 
-        {/* 
-          📚 LESSON: Conditional Rendering
-          
-          We render different HTML elements based on state variables:
-          - If isLoading is true, show a Loading spinner
-          - If loading is done, render the grid of posts
-        */}
         {isLoading ? (
           <div className="blog-loading">
-            <div className="spinner"></div>
-            <p>Fetching posts from database...</p>
+            <p>Loading notes...</p>
           </div>
         ) : (
-          <motion.div
-            className="blog-grid"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-          >
+          <div className="blog-list">
             {posts.map((post) => (
-              <motion.article
-                key={post._id}
-                className="blog-card"
-                variants={cardVariants}
-                whileHover={{ y: -8 }}
-              >
-                {/* Colored strip at top — each card gets a different gradient */}
-                <div
-                  className="blog-card-strip"
-                  style={{ background: post.gradient || 'linear-gradient(135deg, #7c3aed, #ec4899)' }}
-                />
-
-                <div className="blog-card-content">
-                  {/* Category badge — dynamically colored */}
-                  <span
-                    className="blog-category"
-                    style={{
-                      backgroundColor: `${post.categoryColor || '#7c3aed'}20`,
-                      color: post.categoryColor || '#7c3aed',
-                    }}
-                  >
-                    {post.category}
-                  </span>
-
-                  <h3 className="blog-title">{post.title}</h3>
-
-                  <p className="blog-excerpt">{post.excerpt}</p>
-
-                  {/* Bottom row: meta info + read more */}
-                  <div className="blog-meta">
-                    <span>
-                      {formatDate(post.createdAt)} · {post.readTime}
-                    </span>
-                    <Link to={`/blog/${post._id}`} className="blog-read-more">
-                      Read More →
-                    </Link>
-                  </div>
+              <article key={post._id} className="blog-row">
+                <div className="blog-row-meta">
+                  <span className="blog-date">{formatDate(post.createdAt)}</span>
+                  <span className="blog-category">{post.category}</span>
+                  <span className="blog-read-time">{post.readTime}</span>
                 </div>
-              </motion.article>
+
+                <div className="blog-row-main">
+                  <h3 className="blog-title">
+                    <Link to={`/blog/${post._id}`} className="blog-title-link">
+                      {post.title}
+                    </Link>
+                  </h3>
+                  <p className="blog-excerpt">{post.excerpt}</p>
+                </div>
+
+                <div className="blog-row-action">
+                  <Link to={`/blog/${post._id}`} className="blog-read-more">
+                    Read →
+                  </Link>
+                </div>
+              </article>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

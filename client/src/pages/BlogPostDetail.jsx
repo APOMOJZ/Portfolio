@@ -1,104 +1,65 @@
-/*
-  =============================================
-  📚 LESSON: React Router & Single Item Fetching
-  =============================================
-  
-  In a multi-page app, each page has its own URL. React Router handles this 
-  without reloading the browser!
-  
-  KEY CONCEPTS IN THIS FILE:
-  1. useParams Hook: Retrieves parameters from the URL (e.g. gets the blog ID from /blog/:id)
-  2. useNavigate Hook: Lets us programmatically redirect the user (e.g. go back to home)
-  3. single-item fetch: We make an API call to `/api/blog/${id}` to get just this post's data
-  4. DOMPurify or dangerouslySetInnerHTML: React blocks raw HTML string rendering by default 
-     for security. We use dangerouslySetInnerHTML to render our blog content, explaining 
-     why it's used and how to make it safe.
-*/
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaTag } from 'react-icons/fa';
 import './BlogPostDetail.css';
 
-// Offline fallback blog post contents if backend server is not running
 const fallbackBlogContents = {
   '1': {
-    title: 'My Journey into Web Development',
-    category: 'Journey',
-    createdAt: '2025-01-15T00:00:00.000Z',
-    readTime: '5 min read',
-    gradient: 'linear-gradient(135deg, #f97316, #ec4899)',
+    title: 'Managing Client-Side State with localStorage in React',
+    category: 'React.js',
+    createdAt: '2026-04-12T00:00:00.000Z',
+    readTime: '4 min read',
+    excerpt:
+      'Notes on keeping React component state synchronized with browser localStorage for tools like the Kanban Board and Expense Tracker.',
     content: `
-      <h2>The Beginning</h2>
-      <p>Starting web development can feel overwhelming. There are so many technologies: HTML, CSS, JavaScript, React, Node, SQL, NoSQL. Where do you even begin?</p>
-      <p>I started with the basics: HTML and CSS. I learned that HTML is the skeleton, CSS is the skin and clothes, and JavaScript is the brain. Once I got comfortable building static pages, I moved on to JS.</p>
-      <h2>Moving to JavaScript</h2>
-      <p>JavaScript brought my pages to life. I learned about variables, loops, functions, and manipulating the DOM. Building interactive projects (like calculators and weather apps) helped solidify my understanding.</p>
-      <h2>Discovering React</h2>
-      <p>React was a game changer. Component-based architecture made UI development modular and fun. Instead of writing huge HTML files, I could write small, reusable React components!</p>
-      <h2>Next Steps</h2>
-      <p>Now, I am mastering the backend with Node.js, Express, and MongoDB. Full-stack development allows me to build complete, end-to-end applications from scratch.</p>
-    `
+      <h2>Lazy Initialization with useState</h2>
+      <p>When building client-side utilities such as a Kanban board or expense ledger, reading from <code>localStorage</code> inside a lazy initializer function avoids parsing JSON on every re-render.</p>
+      <p>Passing a function to <code>useState(() =&gt; ...)</code> runs the read once during the initial mount and falls back cleanly to default sample data when no saved state exists.</p>
+      <h2>Syncing Updates with useEffect</h2>
+      <p>Pairing that state with a targeted <code>useEffect</code> hook ensures every task move, edit, or new transaction is serialized back to storage immediately after the state updates.</p>
+      <h2>Resetting Predictably</h2>
+      <p>Providing an explicit reset action restores the default array and overwrites the stored key, keeping the interface predictable during testing and demos.</p>
+    `,
   },
   '2': {
-    title: 'Understanding the MERN Stack',
-    category: 'Tutorial',
-    createdAt: '2025-02-20T00:00:00.000Z',
-    readTime: '8 min read',
-    gradient: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+    title: 'Writing Predictable Joins and Constraints in PostgreSQL',
+    category: 'SQL',
+    createdAt: '2026-06-18T00:00:00.000Z',
+    readTime: '5 min read',
+    excerpt:
+      'Practical patterns for primary keys, foreign keys, and multi-table queries when modeling structured application data in SQL.',
     content: `
-      <h2>The MERN Stack Components</h2>
-      <p>MERN is an acronym for four key technologies that make up a full-stack JavaScript environment:</p>
-      <h3>1. MongoDB (Database)</h3>
-      <p>A document-based NoSQL database. It stores data in JSON-like formats called documents. It is highly flexible and scalable.</p>
-      <h3>2. Express.js (Backend Framework)</h3>
-      <p>A lightweight framework for Node.js. It simplifies handling HTTP requests, routing, and building API endpoints.</p>
-      <h3>3. React (Frontend)</h3>
-      <p>A library built by Meta for building user interfaces. It uses components and a Virtual DOM to build fast, interactive user experiences.</p>
-      <h3>4. Node.js (Runtime Environment)</h3>
-      <p>Allows us to run JavaScript outside the browser (on our backend server). It is built on Google Chrome's V8 JavaScript engine.</p>
-      <h2>How They Work Together</h2>
-      <p>1. The user visits the website and interacts with the <strong>React</strong> frontend.<br/>
-         2. React makes HTTP requests (like GET or POST) to the <strong>Node/Express</strong> backend API.<br/>
-         3. The backend receives the request, processes the logic, and talks to the <strong>MongoDB</strong> database.<br/>
-         4. MongoDB sends data back to the backend, which returns it as JSON to React.<br/>
-         5. React updates the UI dynamically using the new data.</p>
-    `
+      <h2>Constraints at the Schema Layer</h2>
+      <p>Defining explicit <code>NOT NULL</code>, <code>CHECK</code>, and <code>FOREIGN KEY</code> constraints in PostgreSQL prevents invalid rows from entering tables regardless of which client writes to them.</p>
+      <h2>Choosing the Right Join</h2>
+      <p>Using <code>INNER JOIN</code> when matching required parent records and <code>LEFT JOIN</code> when optional metadata may be missing keeps query results explicit and easier to debug.</p>
+      <h2>Aggregating with GROUP BY</h2>
+      <p>Summarizing category totals or time-window counts directly in SQL reduces redundant filtering logic on the client and keeps report queries concise.</p>
+    `,
   },
   '3': {
-    title: 'Building My First Full-Stack App',
-    category: 'Project',
-    createdAt: '2025-03-10T00:00:00.000Z',
-    readTime: '6 min read',
-    gradient: 'linear-gradient(135deg, #22c55e, #06b6d4)',
+    title: 'Building FreeClass and Team Data Dashboards',
+    category: 'Projects',
+    createdAt: '2026-09-05T00:00:00.000Z',
+    readTime: '4 min read',
+    excerpt:
+      'Observations from organizing timetable lookups in FreeClass and collaborating across departments on the Food Toxicants Dashboard.',
     content: `
-      <h2>The Concept</h2>
-      <p>For my first full-stack app, I wanted to build something practical but challenging. I decided to make a real-time Task Manager app with custom categories, user authentication, and email notifications.</p>
-      <h2>Key Challenges</h2>
-      <h3>1. Connecting Frontend and Backend</h3>
-      <p>Initially, I faced CORS issues. I learned that I had to explicitly allow my React port on my Express backend using the cors middleware.</p>
-      <h3>2. Managing State</h3>
-      <p>Passing tasks data between components got messy. I learned how to lift state up and use React Context to share data globally across the frontend.</p>
-      <h3>3. Database Operations</h3>
-      <p>Structuring the data schema took some planning. Using Mongoose allowed me to write clean validation schemas for users and tasks.</p>
-      <h2>Lessons Learned</h2>
-      <p>Start small, test endpoints using Postman before writing frontend fetch calls, and write clean, modular code. Don't be afraid of errors — they are your best teachers!</p>
-    `
-  }
+      <h2>Structuring Data for Fast Lookup</h2>
+      <p>In FreeClass, students need to know which rooms are open right now without scanning full timetable tables. Normalizing schedules by building, day, and time slot makes availability checks straightforward.</p>
+      <h2>Interdepartmental Collaboration</h2>
+      <p>Working on the Food Toxicants Dashboard with both Computer Science and Biotech teammates meant translating domain datasets into clean filter controls and readable summary views.</p>
+      <h2>Keeping Interfaces Scannable</h2>
+      <p>Removing decorative clutter and keeping labels, filters, and data rows aligned makes technical dashboards easier to verify and maintain.</p>
+    `,
+  },
 };
 
 function BlogPostDetail() {
-  /*
-    📚 LESSON: useParams
-    
-    If the Route is defined as: <Route path="/blog/:id" element={<BlogPostDetail />} />
-    And the URL is: http://localhost:5173/blog/abc12345
-    → useParams() returns the object { id: "abc12345" }
-  */
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -109,47 +70,39 @@ function BlogPostDetail() {
     if (fallbackPost) {
       setPost(fallbackPost);
     } else {
-      alert('Blog post not found!');
+      alert('Note not found.');
       navigate('/');
     }
     setIsLoading(false);
   }, [id, navigate]);
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   if (isLoading) {
     return (
       <div className="blog-detail-loading-page">
-        <div className="spinner"></div>
-        <p>Loading blog content...</p>
+        <p>Loading note...</p>
       </div>
     );
   }
 
   return (
     <div className="blog-detail-page">
-      {/* Decorative top strip */}
-      <div 
-        className="blog-detail-hero-strip"
-        style={{ background: post.gradient || 'linear-gradient(135deg, #7c3aed, #ec4899)' }}
-      />
-      
       <div className="blog-detail-container">
-        {/* Back Link */}
         <Link to="/" className="back-home-link">
-          <FaArrowLeft /> Back to Portfolio
+          <FaArrowLeft />
+          <span>Back to Portfolio</span>
         </Link>
-        
-        <motion.article 
+
+        <motion.article
           className="blog-detail-article"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.3 }}
         >
-          {/* Metadata */}
           <div className="blog-detail-meta">
             <span className="blog-detail-category">
               <FaTag /> {post.category}
@@ -161,33 +114,18 @@ function BlogPostDetail() {
               <FaClock /> {post.readTime}
             </span>
           </div>
-          
-          {/* Title */}
+
           <h1 className="blog-detail-title">{post.title}</h1>
-          
+
           <p className="blog-detail-excerpt">{post.excerpt}</p>
-          
+
           <hr className="blog-detail-divider" />
-          
-          {/* Content Body */}
-          {/* 
-            📚 LESSON: dangerouslySetInnerHTML
-            
-            By default, React escapes all HTML tags in variables to protect 
-            against Cross-Site Scripting (XSS) attacks. 
-            If you do: <div>{"<p>hello</p>"}</div>, React prints the literal text "<p>hello</p>".
-            
-            To render actual HTML, we use the dangerouslySetInnerHTML attribute.
-            We call it "dangerous" because if you load HTML from untrusted users, 
-            they could inject malicious scripts.
-            Since our blog content is only written by us, this is safe to use!
-          */}
-          <div 
+
+          <div
             className="blog-detail-content-body"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </motion.article>
-
       </div>
     </div>
   );
